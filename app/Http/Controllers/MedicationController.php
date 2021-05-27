@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use App\Models\Medication;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,12 @@ class MedicationController extends Controller
      */
     public function index()
     {
-        return Medication::all();
+        $user = auth()->user();
+
+        return DB::table('medications')
+        ->select('id','name', 'dosage', 'schedule')
+        ->where('user_id', $user->id)
+        ->get();
     }
 
     /**
@@ -40,9 +45,10 @@ class MedicationController extends Controller
         ]);
 
         $response = [
-            'user' => $user->name,
-            'name' => $med->name,
-            'dosage' => $med->dosage,
+            'id'       => $med->id,
+            'user'     => $user->name,
+            'name'     => $med->name,
+            'dosage'   => $med->dosage,
             'schedule' => $med->schedule,
         ];
         return response($response, 201);
@@ -79,6 +85,14 @@ class MedicationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $med = Medication::find($id);
+        $response = [
+            'id'       => $med->id,
+            'name'     => $med->name,
+            'dosage'   => $med->dosage,
+            'schedule' => $med->schedule,
+        ];
+        $med->delete();
+        return response($response, 201);
     }
 }

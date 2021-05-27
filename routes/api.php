@@ -26,7 +26,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/medication', [MedicationController::class, 'index']);
 Route::get('/medication/{id}', [MedicationController::class, 'show']);
 
 // Private Routes
@@ -34,4 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/medication/{id}',    [MedicationController::class, 'update']);
     Route::post('/medication',        [MedicationController::class, 'store']);
     Route::delete('/medication/{id}', [MedicationController::class, 'destroy']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/medication', [MedicationController::class, 'index']);
+
 });
